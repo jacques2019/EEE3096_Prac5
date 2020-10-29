@@ -25,3 +25,5 @@ mcp_value = chan.value
 
 # Convert to Temp
 temp = math.abs((mcp_voltage - mcp_0volt)/mcp_coefficient)
+
+print(temp)
