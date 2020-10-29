@@ -41,7 +41,7 @@ def read_temp_thread():
 
     # Print temp readings
     print('Runtime\t\tTemp Reading\tTemp')
-    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t C'.format((start_temp_time - currentTime), temp_value, temp))
+    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t C'.format((currentTime - start_temp_time), temp_value, temp))
 
 def read_LDR_thread():
     global chan_LDR
@@ -65,7 +65,7 @@ def read_LDR_thread():
 
     # Print LDR readings
     print('Runtime\t\tLDR Reading\tLDR Voltage')
-    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t V'.format((start_LDR_time - currentTime), LDR_value, LDR_reading))
+    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t V'.format((currentTime - start_LDR_time), LDR_value, LDR_reading))
 
 def setup():
     global chan_temp
@@ -87,7 +87,7 @@ def setup():
     GPIO.setup(btn_delay, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(btn_delay, GPIO.FALLING, callback=btn_delay_callback, bouncetime=250)
     
-def btn_delay_callback():
+def btn_delay_callback(channel):
     global delayTime
 
     if (delayTime == 10):
