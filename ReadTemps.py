@@ -69,7 +69,7 @@ def read_LDR_thread():
 
     # Print LDR readings
     print('Runtime\t\tLDR Reading\tLDR Resistance')
-    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t Ohms'.format((currentTime - start_LDR_time), LDR_value, LDR_reading))
+    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t Ohms'.format((currentTime - start_LDR_time), LDR_value, LDR_reading))
 
 def setup():
     global chan_temp
