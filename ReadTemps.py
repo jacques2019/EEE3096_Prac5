@@ -84,6 +84,7 @@ def setup():
     chan_temp = AnalogIn(mcp, MCP.P1)
     chan_LDR = AnalogIn(mcp, MCP.P0)
 
+    GPIO.setup(btn_delay, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(btn_delay, GPIO.FALLING, callback=btn_delay_callback, bouncetime=250)
     
 def btn_delay_callback():
