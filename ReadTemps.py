@@ -2,10 +2,11 @@ import busio
 import digitalio
 import board
 import adafruit_mcp3xxx.mcp3008 as MCP
+import math
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
-mcp_0temp = 0.4
-mcp_coefficient = 10
+mcp_0volt = 0.4
+mcp_coefficient = 0.010
 
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -23,4 +24,4 @@ mcp_voltage = chan.voltage
 mcp_value = chan.value
 
 # Convert to Temp
-temp = (mcp_voltage - mcp_0temp)/mcp_coefficient
+temp = math.abs((mcp_voltage - mcp_0volt)/mcp_coefficient)
