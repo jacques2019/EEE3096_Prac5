@@ -34,5 +34,5 @@ temp = (temp_voltage - temp_0volt)/temp_coefficient
 LDR_reading = 3.3 - LDR_voltage
 
 print('Runtime\tTemp Reading\tTemp')
-print('{0}s\t\t{1}\t\t{2}\t\t'.format(1, temp_value, temp))
+print('{0}s\t\t\t{1}\t\t{2}\t\t'.format(1, temp_value, temp))
 print('{0:.3f}V over the LDR'.format(LDR_reading))
