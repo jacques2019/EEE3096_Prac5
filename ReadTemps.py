@@ -33,6 +33,6 @@ temp = (temp_voltage - temp_0volt)/temp_coefficient
 # Change resisitor voltage to LDR voltage
 LDR_reading = 3.3 - LDR_voltage
 
-print('Runtime\tTemp Reading\tTemp')
-print('{0}s\t\t\t{1}\t\t{2}\t\t'.format(1, temp_value, temp))
-print('{0:.3f}V over the LDR'.format(LDR_reading))
+print('Runtime\t\tTemp Reading\tTemp')
+print('{0}s\t\t{1}\t\t{2:.3f}\t\t'.format(1, temp_value, temp))
+print('{0}s\t\t{1}\t\t{2:.3f}\t\t'.format(1, LDR_value, LDR_reading))
