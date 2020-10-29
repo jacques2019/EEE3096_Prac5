@@ -24,10 +24,12 @@ def read_temp_thread():
     global start_temp_time
     global delayTime
 
+    # Setup thread at set time delay
     thread = threading.Timer(delayTime, read_temp_thread)
     thread.daemon = True
     thread.start()
 
+    # Set start time
     currentTime = int(round(time.time()))
     if (start_temp_time == 0):
         start_temp_time = currentTime
@@ -48,10 +50,12 @@ def read_LDR_thread():
     global start_LDR_time
     global delayTime
 
+    # Setup thread at set time delay
     thread = threading.Timer(delayTime, read_LDR_thread)
     thread.daemon = True
     thread.start()
 
+    # Set start time
     currentTime = int(round(time.time()))
     if (start_LDR_time == 0):
         start_LDR_time = currentTime
@@ -84,20 +88,20 @@ def setup():
     chan_temp = AnalogIn(mcp, MCP.P1)
     chan_LDR = AnalogIn(mcp, MCP.P0)
 
+    # Setup button for interupt and input
     GPIO.setup(btn_delay, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(btn_delay, GPIO.FALLING, callback=btn_delay_callback, bouncetime=250)
     
 def btn_delay_callback(channel):
     global delayTime
 
+    # Cycle delay 
     if (delayTime == 10):
         delayTime = 5
     elif (delayTime == 5):
         delayTime = 1
     elif (delayTime == 1):
         delayTime = 10
-
-    print("pressed")
 
 if __name__ == "__main__":
     setup()
