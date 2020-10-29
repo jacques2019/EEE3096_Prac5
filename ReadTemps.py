@@ -65,11 +65,11 @@ def read_LDR_thread():
     LDR_voltage = chan_LDR.voltage
 
     # Change resisitor voltage to LDR voltage
-    LDR_reading = 3.3 - LDR_voltage
+    LDR_reading = (3.3 - LDR_voltage) / (LDR_voltage/1000)
 
     # Print LDR readings
-    print('Runtime\t\tLDR Reading\tLDR Voltage')
-    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t V'.format((currentTime - start_LDR_time), LDR_value, LDR_reading))
+    print('Runtime\t\tLDR Reading\tLDR Resistance')
+    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t Ohms'.format((currentTime - start_LDR_time), LDR_value, LDR_reading))
 
 def setup():
     global chan_temp
