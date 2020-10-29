@@ -3,36 +3,106 @@ import digitalio
 import board
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
+import threading
+import time
+import RPi.GPIO as GPIO
 
 temp_0volt = 0.4
 temp_coefficient = 0.010
 
-# create the spi bus
-spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
+chan_temp = None
+chan_LDR = None
+btn_delay = 22
 
-# create the cs (chip select)
-cs = digitalio.DigitalInOut(board.D5)
+start_temp_time = 0
+start_LDR_time = 0
 
-# create the mcp object
-mcp = MCP.MCP3008(spi, cs)
+delayTime = 10
 
-# create an analog input channel on pin 0 and 1
-chan_temp = AnalogIn(mcp, MCP.P1)
-chan_LDR = AnalogIn(mcp, MCP.P0)
+def read_temp_thread():
+    global chan_temp
+    global start_temp_time
+    global delayTime
 
-# Read values from ADC
-temp_voltage = chan_temp.voltage
-temp_value = chan_temp.value
+    thread = threading.Timer(delayTime, read_temp_thread)
+    thread.daemon = True
+    thread.start()
 
-LDR_value = chan_LDR.value
-LDR_voltage = chan_LDR.voltage
+    currentTime = int(round(time.time()))
+    if (start_temp_time == 0):
+        start_temp_time = currentTime
 
-# Convert to Temp
-temp = (temp_voltage - temp_0volt)/temp_coefficient
+    # Read values from ADC
+    temp_voltage = chan_temp.voltage
+    temp_value = chan_temp.value
 
-# Change resisitor voltage to LDR voltage
-LDR_reading = 3.3 - LDR_voltage
+    # Convert to Temp
+    temp = (temp_voltage - temp_0volt)/temp_coefficient
 
-print('Runtime\t\tTemp Reading\tTemp')
-print('{0}s\t\t{1}\t\t{2:.3f}\t\t'.format(1, temp_value, temp))
-print('{0}s\t\t{1}\t\t{2:.3f}\t\t'.format(1, LDR_value, LDR_reading))
+    # Print temp readings
+    print('Runtime\t\tTemp Reading\tTemp')
+    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t C'.format((start_temp_time - currentTime), temp_value, temp))
+
+def read_LDR_thread():
+    global chan_LDR
+    global start_LDR_time
+    global delayTime
+
+    thread = threading.Timer(delayTime, read_LDR_thread)
+    thread.daemon = True
+    thread.start()
+
+    currentTime = int(round(time.time()))
+    if (start_LDR_time == 0):
+        start_LDR_time = currentTime
+
+    # Read values from ADC
+    LDR_value = chan_LDR.value
+    LDR_voltage = chan_LDR.voltage
+
+    # Change resisitor voltage to LDR voltage
+    LDR_reading = 3.3 - LDR_voltage
+
+    # Print LDR readings
+    print('Runtime\t\tLDR Reading\tLDR Voltage')
+    print('{0:.0f}s\t\t{1}\t\t{2:.3f}\t\t V'.format((start_LDR_time - currentTime), LDR_value, LDR_reading))
+
+def setup():
+    global chan_temp
+    global chan_LDR
+
+    # create the spi bus
+    spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
+
+    # create the cs (chip select)
+    cs = digitalio.DigitalInOut(board.D5)
+
+    # create the mcp object
+    mcp = MCP.MCP3008(spi, cs)
+
+    # Create an analog input channel on pin 0 and 1
+    chan_temp = AnalogIn(mcp, MCP.P1)
+    chan_LDR = AnalogIn(mcp, MCP.P0)
+
+    GPIO.add_event_detect(btn_delay, GPIO.FALLING, callback=btn_delay_callback, bouncetime=250)
+    
+def btn_delay_callback():
+    global delayTime
+
+    if (delayTime == 10):
+        delayTime = 5
+    elif (delayTime == 5):
+        delayTime = 1
+    elif (delayTime == 1):
+        delayTime = 10
+
+    print("pressed")
+
+if __name__ == "__main__":
+    setup()
+    read_LDR_thread()
+    read_temp_thread()
+
+    # Run indefinitely
+    while True:
+        pass
